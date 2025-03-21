@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 
+// базовый класс для всех выражений
 class Expression {
 public:
     virtual ~Expression() = default;
@@ -12,7 +13,7 @@ public:
     virtual std::string toString() const = 0;
     virtual std::shared_ptr<Expression> derivative() const = 0;
 };
-
+//констата
 class Constant : public Expression {
 private:
     double value;
@@ -22,7 +23,7 @@ public:
     std::string toString() const override { return std::to_string(value); }
     std::shared_ptr<Expression> derivative() const override { return std::make_shared<Constant>(0); }
 };
-
+//переменная
 class Variable : public Expression {
 public:
     double evaluate(double x) const override { return x; }
@@ -30,6 +31,7 @@ public:
     std::shared_ptr<Expression> derivative() const override { return std::make_shared<Constant>(1); }
 };
 
+//сложение
 class Addition : public Expression {
 private:
     std::shared_ptr<Expression> left, right;
@@ -42,6 +44,7 @@ public:
     }
 };
 
+// умножение
 class Multiplication : public Expression {
 private:
     std::shared_ptr<Expression> left, right;
@@ -57,7 +60,8 @@ public:
     }
 };
 
-    
+
+// деление
 class Division : public Expression {
 private:
     std::shared_ptr<Expression> numerator, denominator;
@@ -77,8 +81,13 @@ public:
     }
 };
 
+
 class Cos;
 
+
+
+
+//синус
 class Sin : public Expression {
 private:
     std::shared_ptr<Expression> expr;
@@ -91,6 +100,7 @@ public:
     }
 };
 
+//косинус
 class Cos : public Expression {
 private:
     std::shared_ptr<Expression> expr;
@@ -106,6 +116,9 @@ public:
     }
 };
 
+
+
+//экспонента
 class Exponential : public Expression {
     private:
         std::shared_ptr<Expression> expr;
@@ -119,6 +132,7 @@ class Exponential : public Expression {
     };
     
 
+//степень
 class Logarithm;     
 class Power : public Expression {
 private:
@@ -140,6 +154,7 @@ public:
     }
 };
 
+//логарифм
 class Logarithm : public Expression {
 private:
     std::shared_ptr<Expression> expr;

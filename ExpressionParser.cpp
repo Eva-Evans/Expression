@@ -4,6 +4,7 @@
 #include <cmath>
 #include <map>
 
+//приоретет рператоров
 int ExpressionParser::getPrecedence(char op) {
     if (op == '+' || op == '-') return 1;
     if (op == '*' || op == '/') return 2;
@@ -11,7 +12,7 @@ int ExpressionParser::getPrecedence(char op) {
     return 0;
 }
 
-// Применение оператора к двум операндам
+// мат выражение из операторов
 std::shared_ptr<Expression> ExpressionParser::applyOperator(char op, std::shared_ptr<Expression> left, std::shared_ptr<Expression> right) {
     switch (op) {
         case '+': return std::make_shared<Addition>(left, right);
@@ -23,21 +24,21 @@ std::shared_ptr<Expression> ExpressionParser::applyOperator(char op, std::shared
     }
 }
 
-// Разбиение строки на токены
+// на токены делим строку
 std::vector<std::string> ExpressionParser::tokenize(const std::string& expr) {
     std::vector<std::string> tokens;
     std::stringstream ss(expr);
     char c;
-    while (ss >> c) { // Пока есть символы в строке
+    while (ss >> c) { // пока есть символы в строке
         if (isdigit(c) || c == '.') {
             std::string num(1, c);
-            while (ss.peek() != EOF && (isdigit(ss.peek()) || ss.peek() == '.')) { // Пока следующий символ - цифра или точка
+            while (ss.peek() != EOF && (isdigit(ss.peek()) || ss.peek() == '.')) { // пока следующий символ - цифра или точка
                 num += ss.get();
             }
             tokens.push_back(num);
         } else if (isalpha(c)) {
             std::string var(1, c);
-            while (ss.peek() != EOF && isalpha(ss.peek())) { // Пока следующий символ - буква
+            while (ss.peek() != EOF && isalpha(ss.peek())) { // пока следующий символ - буква
                 var += ss.get();
             }
             tokens.push_back(var);
@@ -48,13 +49,13 @@ std::vector<std::string> ExpressionParser::tokenize(const std::string& expr) {
     return tokens;
 }
 
-// Парсинг выражения
+// парсинг выражения
 std::shared_ptr<Expression> ExpressionParser::parse(const std::string& expr) {
     std::vector<std::string> tokens = tokenize(expr);
     std::stack<std::shared_ptr<Expression>> values;
     std::stack<std::string> ops;
     
-    for (const auto& token : tokens) { // Перебираем токены
+    for (const auto& token : tokens) { // перебираем токены
         if (isdigit(token[0])) {
             values.push(std::make_shared<Constant>(std::stod(token)));
         } else if (token == "x") {
@@ -62,7 +63,7 @@ std::shared_ptr<Expression> ExpressionParser::parse(const std::string& expr) {
         } else if (token == "(" ) {
             ops.push("(");
         } else if (token == ")") {
-            while (!ops.empty() && ops.top() != "(") { // Пока не встретили '('
+            while (!ops.empty() && ops.top() != "(") { // пока не встретили '('
                 auto right = values.top(); values.pop();
                 if (ops.top() == "sin") values.push(std::make_shared<Sin>(right));
                 else if (ops.top() == "cos") values.push(std::make_shared<Cos>(right));
@@ -74,8 +75,8 @@ std::shared_ptr<Expression> ExpressionParser::parse(const std::string& expr) {
                 }
                 ops.pop();
             }
-            ops.pop(); // Убираем '('
-        } else if (std::string("+-*/^").find(token) != std::string::npos) { // Если токен - оператор
+            ops.pop(); // убираем '('
+        } else if (std::string("+-*/^").find(token) != std::string::npos) { // если токен - оператор
             while (!ops.empty() && getPrecedence(ops.top()[0]) >= getPrecedence(token[0])) {
                 auto right = values.top(); values.pop();
                 auto left = values.top(); values.pop();
@@ -83,11 +84,11 @@ std::shared_ptr<Expression> ExpressionParser::parse(const std::string& expr) {
                 ops.pop();
             }
             ops.push(token);
-        } else if (token == "sin" || token == "cos" || token == "exp" || token == "log") { // Если токен - функция
+        } else if (token == "sin" || token == "cos" || token == "exp" || token == "log") { // если токен - функция
             ops.push(token);
         }
     }
-    while (!ops.empty()) { // Пока есть операторы
+    while (!ops.empty()) { // пока есть операторы
         auto right = values.top(); values.pop();
         if (ops.top() == "sin") values.push(std::make_shared<Sin>(right));
         else if (ops.top() == "cos") values.push(std::make_shared<Cos>(right));
@@ -102,11 +103,11 @@ std::shared_ptr<Expression> ExpressionParser::parse(const std::string& expr) {
     return values.top();
 }
 
-// Функция для вычисления значения выражения
+// для вычисления значения выражения
 std::string evaluateExpression(const std::string& expr, const std::map<std::string, double>& variables) {
     std::shared_ptr<Expression> parsedExpr = ExpressionParser::parse(expr);
     
-    // Проверяем все переменные в словаре
+    // проверяем все переменные в словаре
     double result = 0;
     std::cout << parsedExpr->toString() << std::endl;
     for (const auto& [var, val] : variables) {
@@ -116,7 +117,7 @@ std::string evaluateExpression(const std::string& expr, const std::map<std::stri
     return std::to_string(result);
 }
 
-// Функция для вычисления символической производной
+// для вычисления символической производной
 std::string differentiateExpression(const std::string& expr, const std::string& var) {
     std::shared_ptr<Expression> parsedExpr = ExpressionParser::parse(expr);
     std::shared_ptr<Expression> derivative = parsedExpr->derivative();
