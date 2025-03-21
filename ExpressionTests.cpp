@@ -81,19 +81,16 @@ void testLogarithm() {
     std::cout << "testLogarithm passed!\n";
 }
 
-// int main() {
-//     testConstants();
-//     testVariable();
-//     testAddition();
-//     testMultiplication();
-//     testDivision();
-//     testTrigFunctions();
-//     testExponential();
-//     testPower();
-//     testLogarithm();
-//     std::cout << "All tests passed successfully!\n";
-//     auto expr = ExpressionParser::parse("x ^ 2 + 3 * x + 5");
-//     std::cout << "Expression: " << expr->toString() << std::endl;
-//     std::cout << "Derivative: " << expr->evaluate(4) << std::endl;
-//     return 0;
-// }
+int main() {
+    testConstants();
+    testVariable();
+    testAddition();
+    testMultiplication();
+    testDivision();
+    testTrigFunctions();
+    testExponential();
+    testPower();
+    testLogarithm();
+    std::cout << "All tests passed successfully!\n";
+    return 0;
+}

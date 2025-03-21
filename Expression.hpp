@@ -151,6 +151,7 @@ public:
         return std::make_shared<Division>(expr->derivative(), expr);
     }
 };
+    
 
 #endif // EXPRESSION_HPP
 

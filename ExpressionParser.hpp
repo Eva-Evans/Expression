@@ -20,4 +20,9 @@ private:
     static std::vector<std::string> tokenize(const std::string& expr);
 };
 
+std::string evaluateExpression(const std::string& expr, const std::map<std::string, double>& variables);
+
+// Функция для вычисления символической производной
+std::string differentiateExpression(const std::string& expr, const std::string& var);
+
 #endif // EXPRESSION_PARSER_HPP
